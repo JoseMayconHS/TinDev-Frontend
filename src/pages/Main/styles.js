@@ -74,3 +74,51 @@ export const Buttons = styled.div`
 		}
 	}
 `
+
+export const MatchContainer = styled.div`
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	margin: 0;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.8);
+	transition: all .3s ease-in;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	strong {
+		font-size: 32px;
+		color: #FFF;
+	}
+
+	p {
+		margin-top: 10px;
+		font-size: 20px;
+		line-height: 30px;
+		width: 97%;
+		max-width: 400px;
+		color: rgba(255, 255, 255, .8);
+	}
+
+	button {
+		background: none;
+		color: rgba(255, 255, 255, .8);	
+		font-size: 20px;
+
+		:hover {
+			color: rgb(255, 255, 255);
+		}
+	}
+`
+
+export const MatchAvatar = styled.img`
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	border: 5px solid white;
+	margin: 30px 0;
+`

@@ -16,8 +16,6 @@ const Home = ({ history }) => {
 
 		const { data } = await api.post('/devs', { username })
 
-		console.log(data)
-
 		if (!data.ok) return setMessage(data.message)
 
 		history.push(`/dashboard/${data.dev._id}`)

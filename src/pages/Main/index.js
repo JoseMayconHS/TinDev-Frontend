@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import io from 'socket.io-client'
 
 import api from '../../api'
 
 import logo from '../../assets/logo.svg'
 import like from '../../assets/like.svg'
 import dislike from '../../assets/dislike.svg'
+import itsamatch from '../../assets/itsamatch.png'
 
 import { 
-	Dashboard, DevsGroup, Buttons 
+	Dashboard, DevsGroup, Buttons,
+	MatchContainer, MatchAvatar 
 } from './styles'
 
 const Main = ({ match }) => {
 	const [devs, setDevs] = useState([])
 	const [ready, setReady] = useState(false)
+	const [matchDev, setMatchDev] = useState(false)
 
 	useEffect(() => {
 		(async function loadDevs() {
@@ -28,6 +32,15 @@ const Main = ({ match }) => {
 
 			activeEffect()
 		})()
+	}, [match.params.id])
+
+	useEffect(() => {
+		const socket = io('http://localhost:3001', {
+			query: { user: match.params.id }
+		})
+
+
+		socket.on('match', dev => setMatchDev(dev))
 	}, [match.params.id])
 
 	function activeEffect() {
@@ -102,6 +115,15 @@ const Main = ({ match }) => {
 				) : (
 					<h1>Carregando...</h1>
 				)}
+			{ matchDev && (
+				<MatchContainer>
+					<img src={itsamatch} alt="It's a match" />
+					<MatchAvatar src={matchDev.avatar} alt='Avatar' />
+					<strong>{matchDev.name}</strong>
+					<p>{matchDev.bio}</p>
+					<button onClick={() => setMatchDev(false)}>Fechar</button>
+				</MatchContainer>
+			) }	
 		</Dashboard>
 	)
 }
