@@ -20,18 +20,7 @@ const Main = ({ match }) => {
 	const [matchDev, setMatchDev] = useState(false)
 
 	useEffect(() => {
-		(async function loadDevs() {
-			const { data } = await api.get('/devs', { 
-					headers: { 
-						user: match.params.id
-					} 
-				})
-
-			setDevs(data.users)
-			setReady(true)
-
-			activeEffect()
-		})()
+		doRequest()
 	}, [match.params.id])
 
 	useEffect(() => {
@@ -39,26 +28,49 @@ const Main = ({ match }) => {
 			query: { user: match.params.id }
 		})
 
-
 		socket.on('match', dev => setMatchDev(dev))
 	}, [match.params.id])
 
+	async function doRequest() {
+		const { data } = await api.get('/devs', { 
+			headers: { 
+				user: match.params.id
+			} 
+		})
+
+		setDevs(data.users)
+
+		setReady(true)
+		activeEffect()
+	}
+
+	function activeOneEffect() {
+		try {
+			document.querySelector('#devs > li').style.opacity = '1'	
+		} catch(e) {}
+	}
+
 	function activeEffect() {
-		setTimeout(() => {
-			document.querySelectorAll('#devs > li').forEach((li, index) => {
-				setTimeout(() => li.style.opacity = '1', 300 * (index + 1))
-			})
-		}, 400)
+		try {
+			setTimeout(() => {
+				document.querySelectorAll('#devs > li').forEach((li, index) => {
+					setTimeout(() => li.style.opacity = '1', 300 * (index + 1))
+				})
+			}, 400)
+		} catch(e) {}
 	}
 
 	function kickEffect(id) {
-		document.querySelector(`#li-${id}`)
-			.style.opacity = '0'
+		try {
+			document.querySelector(`#li-${id}`)
+				.style.opacity = '0'
 
-		setTimeout(() => {
-			setDevs(devs.filter(({ _id }) => _id !== id))
-			document.querySelectorAll('#devs > li').forEach(li => li.style.opacity = '1')
-		}, 500)
+			setTimeout(() => {
+				setDevs(devs.filter(({ _id }) => _id !== id))
+				document.querySelectorAll('#devs > li').forEach(li => li.style.opacity = '1')
+			}, 500)	
+		} catch(e) {}
+		
 	}
 
 	async function handleLike(id) {
@@ -78,7 +90,7 @@ const Main = ({ match }) => {
 			} 
 		})
 
-		data.ok && setDevs(devs.filter(({ _id }) => _id !== id))
+		data.ok && kickEffect(id)
 	}
 
 	return (
